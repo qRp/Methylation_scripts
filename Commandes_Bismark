@@ -1,0 +1,18 @@
+for R1 in *R1*fastq.gz
+do
+         R2=$( echo $R1 | sed "s/R1/R2/g")
+         $bismark/bismark --genome $mm10 --path_to_bowtie $BT -1 $R1 -2 $R2 --rg_tag & 
+done
+wait
+#Bismark report for each in the directory (auto)
+$bismark/bismark2report
+
+#Bismark summary for all in once
+$bismark/bismark2summary
+
+#Bismark call for each bam (not auto)
+for i in *bam
+do
+	$bismark/bismark_methylation_extractor --bedGraph $i
+done
+
